@@ -5,7 +5,7 @@ import com.datastax.driver.dse.DseSession;
 import com.datastax.driver.dse.graph.GraphResultSet;
 import com.datastax.driver.dse.graph.GraphStatement;
 import com.datastax.driver.dse.graph.SimpleGraphStatement;
-import com.datastax.junit.remote.Remote;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +19,6 @@ import static org.junit.Assert.fail;
  *
  * Created by davidfelcey on 30/09/2016.
  */
-
-@Remote.RunWith(Remote.class)
 public class RemoteGraphTest {
     private static final Logger logger = LoggerFactory.getLogger(RemoteGraphTest.class);
     private static final String GRAPH_HOST = "127.0.0.1";
@@ -55,7 +53,7 @@ public class RemoteGraphTest {
     @org.junit.After
     public void tearDown() throws Exception {
         if (dseCluster != null) {
-            dseSession.executeGraph("system.graph('" + GRAPH_NAME + "').drop()");
+            // dseSession.executeGraph("system.graph('" + GRAPH_NAME + "').drop()");
             dseCluster.close();
             logger.debug("Disconnected from " + GRAPH_HOST);
         }
