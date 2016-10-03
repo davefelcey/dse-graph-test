@@ -46,7 +46,7 @@ public class RemoteGraphTest {
     }
 
     /**
-     * Destory the test graph and close the session with the DSE cluster
+     * Destroy the test graph and close the session with the DSE cluster
      *
      * @throws Exception if any errors occur
      */
