@@ -1,0 +1,12 @@
+# Example stop words
+a
+an
+and
+are
+as
+at
+be
+but
+by
+for
+if

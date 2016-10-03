@@ -1,0 +1,3 @@
+# Example synonym mappings
+teh => the
+
