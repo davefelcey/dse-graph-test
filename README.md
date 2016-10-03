@@ -22,15 +22,14 @@ by the graph index. This is done by doing the following;
 fail the first time.
 
 2. Fetch the schema and configuration for the Solr core created by
-adding the graph index as follwos;
+adding the graph index and then copy the schema so it can be
+updated as follwos;
 
   ```
   bin/dsetool get_core_config remote_test.test_vertex_p > init_config.xml
   bin/dsetool get_core_schema remote_test.test_vertex_p > init_schema.xml
   cp init_schema.xml new_schema.xml
   ```
-  
-The last command creates a copy of the Solr core schema to update
 
 3. Change the schema configuration of the field you want to be able to
 perform case insensitive searches against, in this case the 'name' field,
