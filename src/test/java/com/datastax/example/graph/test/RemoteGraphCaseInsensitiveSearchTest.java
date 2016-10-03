@@ -46,13 +46,15 @@ public class RemoteGraphCaseInsensitiveSearchTest {
     }
 
     /**
-     * Destory the test graph and close the session with the DSE cluster
+     * Destroy the test graph and close the session with the DSE cluster
      *
      * @throws Exception if any errors occur
      */
     @org.junit.After
     public void tearDown() throws Exception {
         if (dseCluster != null) {
+            // Keep graph so that Solr index created can be manually changed
+            // to support case insensitive search, as per notes
             // dseSession.executeGraph("system.graph('" + GRAPH_NAME + "').drop()");
             dseCluster.close();
             logger.debug("Disconnected from " + GRAPH_HOST);
