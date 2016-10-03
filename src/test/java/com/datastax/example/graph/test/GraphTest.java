@@ -19,8 +19,8 @@ import static org.junit.Assert.fail;
  *
  * Created by davidfelcey on 30/09/2016.
  */
-public class RemoteGraphCaseInsensitiveSearchTest {
-    private static final Logger logger = LoggerFactory.getLogger(RemoteGraphCaseInsensitiveSearchTest.class);
+public class GraphTest {
+    private static final Logger logger = LoggerFactory.getLogger(GraphTest.class);
     private static final String GRAPH_HOST = "127.0.0.1";
     private static final String GRAPH_NAME = "remote_test";
     private DseCluster dseCluster = null;
@@ -53,8 +53,6 @@ public class RemoteGraphCaseInsensitiveSearchTest {
     @org.junit.After
     public void tearDown() throws Exception {
         if (dseCluster != null) {
-            // Keep graph so that Solr index created can be manually changed
-            // to support case insensitive search, as per notes
             // dseSession.executeGraph("system.graph('" + GRAPH_NAME + "').drop()");
             dseCluster.close();
             logger.debug("Disconnected from " + GRAPH_HOST);
@@ -62,8 +60,7 @@ public class RemoteGraphCaseInsensitiveSearchTest {
     }
 
     /**
-     * Test that can perform multiple graph operations evne if exceptino
-     * occurs on server side
+     * Simple test to write and then read a vertex
      *
      * @throws Exception if any errors occour
      */
@@ -71,31 +68,22 @@ public class RemoteGraphCaseInsensitiveSearchTest {
     public void testGraphQuery() throws Exception {
         try {
             // Insert a new vertex
-            GraphStatement s1 = new SimpleGraphStatement("g.addV(label, 'test_vertex', 'name', 'Dave')").setGraphName(GRAPH_NAME);
+            GraphStatement s1 = new SimpleGraphStatement("g.addV(label, 'test_vertex')").setGraphName(GRAPH_NAME);
             dseSession.executeGraph(s1);
             logger.debug("Added vertex to graph " + GRAPH_NAME);
-
-            // Add search index
-            GraphStatement s2 = new SimpleGraphStatement("schema.vertexLabel('test_vertex').index('search').search().by('name').asString().ifNotExists().add()").setGraphName(GRAPH_NAME);
-            dseSession.executeGraph(s2);
-            logger.debug("Added vertex index graph " + GRAPH_NAME);
 
             // Allow for graph modification
             TimeUnit.SECONDS.sleep(10);
 
-            // Query property with case insensitive search
-            GraphStatement s3 = new SimpleGraphStatement("g.V().has('test_vertex','name','dave')").setGraphName(GRAPH_NAME);
-            GraphResultSet rs = dseSession.executeGraph(s3);
-            if(rs.one() == null) {
-                fail("Could not do case insensitive property lookup");
-            } else {
-                String nameProperty = rs.one().asVertex().getProperties().next().getValue().as(String.class);
+            // Query the graph for the new vertex
+            GraphStatement s2 = new SimpleGraphStatement("g.V()").setGraphName(GRAPH_NAME);
+            GraphResultSet rs = dseSession.executeGraph(s2);
+            String vertexLabel = rs.one().asVertex().getLabel();
 
-                logger.debug("Vertex name property value: " + nameProperty);
+            logger.debug("Vertex label: " + vertexLabel);
 
-                // Check vertex label matches value created
-                assertEquals(nameProperty, "Dave");
-            }
+            // Check vertex label matches value created
+            assertEquals(vertexLabel, "test_vertex");
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
