@@ -19,22 +19,23 @@ The case insensitive search test involves overriding the index created
 by the graph index. This can be done as follows;
 
 1. Run the test the first time to create the Solr index. The test will 
-fail the first time.
+fail the first time because you have not made the search index case 
+sensitive yet.
 
 2. Fetch the schema and configuration for the Solr core created by
 adding the graph index and then copy the schema so it can be
 updated as follwos;
 
   ```
-  bin/dsetool get_core_config remote_test.test_vertex_p > init_config.xml
-  bin/dsetool get_core_schema remote_test.test_vertex_p > init_schema.xml
+  $DSE_HOME/bin/dsetool get_core_config remote_test.test_vertex_p > init_config.xml
+  $DSE_HOME/bin/dsetool get_core_schema remote_test.test_vertex_p > init_schema.xml
   cp init_schema.xml new_schema.xml
   ```
 
 3. Change the schema configuration of the field you want to be able to
-perform case insensitive searches against, in this case the 'name' field,
-adding the the 'text_general' filed type and modifying the type of the 
-field;
+perform case insensitive searches against, in this case the 'name' field. To do this
+you need to add a new field type, 'text_general' and modify the type of the 'name' field definition 
+to be 'text_general'. The format of the new field type and updated 'name' field are shown below.
 
   ```xml
   <!-- Add to field definitions -->
@@ -59,17 +60,17 @@ field;
   <field docValues="true" indexed="true" multiValued="false" name="name" stored="true" type="text_general"/>
   ```
 
-4. Upload the index resources required by the new field type as follows;
+4. Upload the index resources (contained in this example) required by the new field type as follows;
 
   ```
-  bin/dsetool write_resource remote_test.test_vertex_p name=stopwords.txt file=stopwords.txt
-  bin/dsetool write_resource remote_test.test_vertex_p name=synonyms.txt file=synonyms.txt
+  $DSE_HOME/bin/dsetool write_resource remote_test.test_vertex_p name=stopwords.txt file=stopwords.txt
+  $DSE_HOME/bin/dsetool write_resource remote_test.test_vertex_p name=synonyms.txt file=synonyms.txt
   ```
   
 5. Finally rebuild and re-index the Solr core for the graph index as follows;
 
   ```
-  bin/dsetool reload_core remote_test.test_vertex_p reindex=true schema=new_schema.xml solrconfig=init_config.xml
+  $DSE_HOME/bin/dsetool reload_core remote_test.test_vertex_p reindex=true schema=new_schema.xml solrconfig=init_config.xml
   ```
 
 Note: if you add or modify the graph index at the moment there is a risk that 
