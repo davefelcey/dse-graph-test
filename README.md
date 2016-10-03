@@ -16,7 +16,7 @@ To run the JUnit test use Maven as follows;
   mvn test
   ```
 The case insensitive search test involves overriding the index created
-by the graph index. This is done by doing the following;
+by the graph index. This can be done as follows;
 
 1. Run the test the first time to create the Solr index. The test will 
 fail the first time.
