@@ -7,7 +7,7 @@ Graph services enabled (the -g flag enables Graph services and
 the -f flag runs it in the foreground)
 
   ```
-  dse cassandra -g-f
+  dse cassandra -g -f
   ```
          
 To run the JUnit test use Maven as follows;
