@@ -72,7 +72,3 @@ to be 'text_general'. The format of the new field type and updated 'name' field 
   ```
   $DSE_HOME/bin/dsetool reload_core remote_test.test_vertex_p reindex=true schema=new_schema.xml solrconfig=init_config.xml
   ```
-
-Note: if you add or modify the graph index at the moment there is a risk that 
-the external modification will be overritten, but this will be addressed
-in a future patch.
